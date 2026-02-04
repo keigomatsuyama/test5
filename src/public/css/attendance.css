@@ -1,0 +1,107 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  background-color: #f3f3f3;
+}
+
+/* ===== ヘッダー ===== */
+.header {
+  background-color: #000;
+  color: #fff;
+  height: 60px;
+  padding: 0 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header img {
+  height: 24px;
+}
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-left: 24px;
+  font-size: 14px;
+}
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav form {
+  margin-left: 24px;
+}
+/* ===== メイン ===== */
+.container {
+  height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.status {
+  background-color: #ccc;
+  color: #555;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+
+.date {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.time {
+  font-size: 64px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+/* ===== ボタン ===== */
+.buttons {
+  display: flex;
+  gap: 40px;
+}
+
+.btn {
+  width: 160px;
+  height: 56px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-black {
+  background-color: #000;
+  color: #fff;
+  border: none;
+}
+
+.btn-white {
+  background-color: #fff;
+  color: #000;
+  border: none;
+}
+.logout-link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff; /* ← これが必須 */
+  font-size: 14px;
+}

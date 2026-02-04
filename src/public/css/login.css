@@ -1,0 +1,87 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  background-color: #fff;
+}
+
+/* ===== ヘッダー ===== */
+.header {
+ background-color: #000;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding-left: 40px;
+}
+
+.header img {
+  height: 24px;
+}
+
+/* ===== メイン ===== */
+.login-container {
+  max-width: 400px;
+  margin: 100px auto 0;
+  text-align: center;
+}
+
+.login-title {
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+/* ===== フォーム ===== */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.login-form label {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.login-form input {
+  height: 44px;
+  padding: 0 12px;
+  font-size: 14px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+/* エラーメッセージ */
+.error-message {
+  color:red;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 12px;
+}
+
+/* ===== ボタン ===== */
+.login-form button {
+  height: 48px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* ===== 会員登録リンク ===== */
+.register-link {
+  margin-top: 20px;
+  font-size: 13px;
+}
+
+.register-link a {
+  color: #0066cc;
+  text-decoration: none;
+}

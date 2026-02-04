@@ -1,0 +1,151 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  background-color: #f3f3f3;
+}
+
+/* ===== ヘッダー ===== */
+.header {
+  background-color: #000;
+  color: #fff;
+  height: 60px;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header img {
+  height: 24px;
+}
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-left: 24px;
+  font-size: 14px;
+}
+
+.logout-link {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  margin-left: 24px;
+  cursor: pointer;
+}
+
+/* ===== メイン ===== */
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+}
+
+.title {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+/* ===== カード ===== */
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  padding: 20px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  width: 150px;
+  color: #777;
+  font-size: 14px;
+}
+
+.value {
+  flex: 1;
+  font-size: 14px;
+}
+
+.split {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+input {
+  width: 80px;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+  background-color: #fafafa;
+}
+
+textarea {
+  width: 100%;
+  height: 60px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: none;
+  background-color: #fafafa;
+}
+
+/* ===== ボタン ===== */
+.button-area {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-black {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 12px 40px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.pending-message {
+  color: #ff6b6b;          /* 画像に近い薄赤 */
+  font-size: 14px;
+  margin-top: 20px;
+  text-align: right;       /* 右寄せ */
+  padding-right: 20px;     /* カードと少し間隔 */
+}
+.error-message {
+  color:red;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 12px;
+}
+
+.approved-btn {
+  background-color: #777;
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: default;
+}

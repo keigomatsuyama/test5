@@ -1,0 +1,105 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* ===== Header ===== */
+.header {
+    background-color: #000;
+    color: #fff;
+    height: 60px;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.header img {
+    height: 24px;
+}
+.header-left {
+    font-weight: bold;
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.header-nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 24px;
+    font-size: 14px;
+}
+.nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 24px;
+    font-size: 14px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* タブ */
+.tab-menu {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 24px;
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.tab.active {
+  border-bottom: 2px solid #000;
+  font-weight: bold;
+}
+
+/* テーブル */
+.table-wrapper {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  font-size: 13px;
+  padding: 12px 0;
+  border-bottom: 2px solid #ddd;
+  text-align: left;
+}
+
+tbody td {
+  font-size: 13px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* 詳細リンク */
+.detail {
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+}

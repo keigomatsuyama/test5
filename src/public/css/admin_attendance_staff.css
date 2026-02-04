@@ -1,0 +1,127 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  background: #f5f5f5;
+  color: #333;
+}
+
+/* ヘッダー */
+.header {
+  background-color: #000;
+  color: #fff;
+  height: 60px;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header img {
+  height: 24px;
+}
+.header-left {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.header-nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-left: 30px;
+  font-size: 14px;
+}
+/* メイン */
+.container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+
+.title {
+  font-size: 20px;
+  margin-bottom: 24px;
+  font-weight: bold;
+}
+
+/* 月切り替え */
+.month-nav {
+  background: #fff;
+  border-radius: 8px;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.month-btn {
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+
+.month-center {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* テーブル */
+.table-wrapper {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  padding: 12px 0;
+  font-size: 13px;
+  border-bottom: 2px solid #ddd;
+}
+
+tbody td {
+  padding: 10px 0;
+  font-size: 13px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+tbody td:first-child {
+  text-align: left;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* 詳細リンク */
+.detail {
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* CSV */
+.csv-area {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.csv-btn {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
