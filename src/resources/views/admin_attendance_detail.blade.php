@@ -2,139 +2,154 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>勤怠詳細</title>
-  <link rel="stylesheet" href="{{ asset('css/admin_detail.css') }}">
+  <title>勤怠詳細（管理者）</title>
+  <link rel="stylesheet" href="{{ asset('css/attendance_detail.css') }}">
 </head>
 <body>
 
 <header class="header">
   <img src="{{ asset('images/logo.png') }}" alt="ロゴ">
-
-  <nav class="header-nav">
+  <nav class="nav">
     <a href="{{ route('admin.attendances.index') }}">勤怠一覧</a>
     <a href="{{ route('admin.staff.list') }}">スタッフ一覧</a>
     <a href="{{ route('admin.stamp.index') }}">申請一覧</a>
-    <a href="{{ route('logout') }}"
-       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-      ログアウト
-    </a>
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+    <form method="POST" action="{{ route('logout') }}">
       @csrf
+      <button class="logout-link">ログアウト</button>
     </form>
   </nav>
 </header>
 
 <main class="container">
-  <h1 class="title">｜勤怠詳細</h1>
-
-  {{-- 成功メッセージ --}}
-  @if(session('success'))
-    <div class="alert-success">
-      {{ session('success') }}
-    </div>
-  @endif
+  <h1 class="title">勤怠詳細</h1>
 
   <form method="POST" action="{{ route('admin.attendances.update', $attendance->id) }}">
     @csrf
     @method('PATCH')
-    <input type="hidden" name="redirect_to" value="{{ url()->previous() }}">
 
-    <div class="detail-card">
-      <table class="detail-table">
+@php
+    $latestRequest = $attendance->attendanceRequests
+        ->sortByDesc('id')
+        ->first();
 
-        <tr>
-          <th>名前</th>
-          <td colspan="3">{{ $attendance->user->name }}</td>
-        </tr>
+    $display = $latestRequest ?? $attendance;
 
-        <tr>
-          <th>日付</th>
-          <td>{{ \Carbon\Carbon::parse($attendance->date)->format('Y年') }}</td>
-          <td colspan="2">{{ \Carbon\Carbon::parse($attendance->date)->format('m月d日') }}</td>
-        </tr>
+    $break1 = $display->breaks->get(0);
+    $break2 = $display->breaks->get(1);
+        $isPending = $latestRequest && $latestRequest->status === 'pending';
+            $status = $latestRequest->status ?? null;
+@endphp
 
-        {{-- 出勤・退勤 --}}
-        <tr>
-          <th>出勤・退勤</th>
-          <td>
-            <input type="time" name="clock_in"
-                   value="{{ old('clock_in', $attendance->clock_in) }}">
-            @error('clock_in')
-              <div class="error-message">{{ $message }}</div>
-            @enderror
-          </td>
-          <td class="center">〜</td>
-          <td>
-            <input type="time" name="clock_out"
-                   value="{{ old('clock_out', $attendance->clock_out) }}">
-            @error('clock_out')
-              <div class="field-error">{{ $message }}</div>
-            @enderror
-          </td>
-        </tr>
 
-        {{-- 休憩1 --}}
-        @php $break1 = $attendance->breaks->get(0); @endphp
-        <tr>
-          <th>休憩</th>
-          <td>
-            <input type="time" name="breaks[0][break_start]"
-                   value="{{ old('breaks.0.break_start', $break1?->break_start) }}">
-            @error('breaks.0.break_start')
-              <div class="error-message">{{ $message }}</div>
-            @enderror
-          </td>
-          <td class="center">〜</td>
-          <td>
-            <input type="time" name="breaks[0][break_end]"
-                   value="{{ old('breaks.0.break_end', $break1?->break_end) }}">
-            @error('breaks.0.break_end')
-              <div class="error-message">{{ $message }}</div>
-            @enderror
-          </td>
-        </tr>
+    <div class="card">
 
-        {{-- 休憩2 --}}
-        @php $break2 = $attendance->breaks->get(1); @endphp
-        <tr>
-          <th>休憩2</th>
-          <td>
-            <input type="time" name="breaks[1][break_start]"
-                   value="{{ old('breaks.1.break_start', $break2?->break_start) }}">
-            @error('breaks.1.break_start')
-              <div class="error-message">{{ $message }}</div>
-            @enderror
-          </td>
-          <td class="center">〜</td>
-          <td>
-            <input type="time" name="breaks[1][break_end]"
-                   value="{{ old('breaks.1.break_end', $break2?->break_end) }}">
-            @error('breaks.1.break_end')
-              <div class="error-message">{{ $message }}</div>
-            @enderror
-          </td>
-        </tr>
+      {{-- 名前 --}}
+      <div class="row">
+        <div class="label">名前</div>
+        <div class="value">{{ $attendance->user->name }}</div>
+      </div>
 
-        {{-- 備考 --}}
-        <tr>
-          <th>備考</th>
-          <td colspan="3">
-            <textarea name="remark">{{ old('remark', $attendance->remark) }}</textarea>
-            @error('remark')
-              <div class="error-message">{{ $message }}</div>
-            @enderror
-          </td>
-        </tr>
-
-      </table>
+      {{-- 日付 --}}
+      <div class="row">
+      <div class="label">日付</div>
+      <div class="value">
+        {{ \Carbon\Carbon::parse($attendance->date)->locale('ja')->translatedFormat('Y年n月j日(D)') }}
+      </div>
     </div>
-
-    <div class="button-area">
-      <button type="submit" class="edit-btn">修正</button>
+     <div class="row">
+  <div class="label">出勤・退勤</div>
+  <div class="value">
+    <div class="split">
+      <input type="text" name="clock_in"
+       value="{{ old('clock_in', optional($display->clock_in)->format('H:i')) }}"
+>
+      <span>〜</span>
+      <input type="text" name="clock_out"
+        value="{{ old('clock_out', optional($display->clock_out)->format('H:i')) }}">
     </div>
+  </div>
+</div>
+  {{-- 出勤・退勤エラー（1回だけ表示） --}}
+    @if ($errors->has('clock_in') || $errors->has('clock_out'))
+      <p class="error-message">出勤時間もしくは退勤時間が不適切な値です</p>
+    @endif
 
+    @php
+      $break1 = $display->breaks->get(0);
+      $break2 = $display->breaks->get(1);
+    @endphp
+
+
+      {{-- 休憩 --}}
+     <div class="row">
+  <div class="label">休憩1</div>
+  <div class="value">
+    <div class="split">
+      <input type="text" name="breaks[0][break_start]"value="{{ old('breaks.0.break_start', optional($break1?->break_start)->format('H:i')) }}"
+>
+      <span>〜</span>
+      <input type="text" name="breaks[0][break_end]"
+        value="{{ old('breaks.0.break_end', optional($break1?->break_end)->format('H:i')) }}">
+    </div>
+  </div>
+</div>
+ @error('breaks.0.break_start') <p class="error-message">{{ $message }}</p> @enderror
+    @error('breaks.0.break_end')   <p class="error-message">{{ $message }}</p> @enderror
+
+      {{-- 休憩2 --}}
+      <div class="row">
+        <div class="label">休憩2</div>
+        <div class="value split">
+          <input type="text" name="breaks[1][break_start]"
+            value="{{ old('breaks.1.break_start', optional($break2?->break_start)->format('H:i')) }}">
+          〜
+          <input type="text" name="breaks[1][break_end]"
+            value="{{ old('breaks.1.break_end', optional($break2?->break_end)->format('H:i')) }}">
+        </div>
+      </div>
+ @error('breaks.1.break_start') <p class="error-message">{{ $message }}</p> @enderror
+    @error('breaks.1.break_end')   <p class="error-message">{{ $message }}</p> @enderror
+      {{-- 備考 --}}
+      <div class="row">
+  <div class="label">備考</div>
+
+  <div class="value">
+<textarea name="remark"
+    {{ in_array($status, ['pending', 'approved']) ? 'readonly' : '' }}>
+    {{ old('remark', $display->remark ?? '') }}
+</textarea>
+  </div>
+</div>
+    @error('remark')
+      <p class="error-message">{{ $message }}</p>
+    @enderror
+  </div>
+</div>
+
+ <div class="button-area">
+
+    @if ($status === 'pending')
+        <p class="pending-message">
+            ※承認待ちのため修正はできません。
+        </p>
+
+    @elseif ($status === 'approved')
+        <span class="approved-btn">
+            承認済み
+        </span>
+
+    @else
+        <button type="submit" class="btn-black">
+            修正
+        </button>
+    @endif
+
+</div>
+
+
+  <div class="button-area">
   </form>
 </main>
-
+  <div class="button-area">
 </body>
 </html>

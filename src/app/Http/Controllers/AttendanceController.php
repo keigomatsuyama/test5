@@ -117,6 +117,7 @@ class AttendanceController extends Controller
 }
 public function detail(Request $request, $id)
 {
+
     $attendance = Attendance::with(['user', 'breaks'])
         ->findOrFail($id);
 

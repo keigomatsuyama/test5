@@ -17,6 +17,10 @@ class Attendance extends Model
         'status',
         'remark',
     ];
+    protected $casts = [
+    'clock_in'  => 'datetime:H:i',
+    'clock_out' => 'datetime:H:i',
+];
     // ユーザーに属する
     public function user()
     {
@@ -26,14 +30,10 @@ class Attendance extends Model
     // 休憩（複数）
     public function breaks()
     {
-        return $this->hasMany(BreakTime::class);
+        return $this->hasMany(BreakTime::class)->orderBy('break_start');
     }
 
-    // 修正申請（1件）
-    public function requests()
-    {
-        return $this->hasMany(AttendanceRequest::class);
-    }
+    // 修正申請（複数）
     public function attendanceRequests()
 {
     return $this->hasMany(AttendanceRequest::class);

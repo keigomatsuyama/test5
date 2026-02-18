@@ -60,41 +60,78 @@
 
       <tbody>
         @foreach ($attendances as $attendance)
-        @php
-        $breakMinutes = $attendance->breaks->sum(function ($b) {
-        if ($b->break_start && $b->break_end) {
+@php
+$display = $attendance;
+$breakMinutes = 0;
+$totalMinutes = 0;
+
+// 最新申請を取得
+$latestRequest = $attendance->attendanceRequests
+    ->sortByDesc('id')
+    ->first();
+
+// 申請があれば優先表示
+if ($latestRequest) {
+    $display = $latestRequest;
+}
+
+// 休憩計算
+$breakMinutes = $display->breaks->sum(function ($b) {
+    if ($b->break_start && $b->break_end) {
         return \Carbon\Carbon::parse($b->break_end)
-        ->diffInMinutes(\Carbon\Carbon::parse($b->break_start));
-        }
-        return 0;
-        });
+            ->diffInMinutes(\Carbon\Carbon::parse($b->break_start));
+    }
+    return 0;
+});
 
-        $workMinutes = null;
-        if ($attendance->clock_in && $attendance->clock_out) {
-        $workMinutes =
-        \Carbon\Carbon::parse($attendance->clock_out)
-        ->diffInMinutes(\Carbon\Carbon::parse($attendance->clock_in))
-        - $breakMinutes;
-        }
+// 勤務時間計算（マイナス防止）
+if ($display->clock_in && $display->clock_out) {
 
-        $fmt = fn($m) => $m !== null
-        ? floor($m/60).':'.sprintf('%02d',$m%60)
-        : '';
-        @endphp
+    $workMinutes =
+        \Carbon\Carbon::parse($display->clock_out)
+        ->diffInMinutes(\Carbon\Carbon::parse($display->clock_in));
 
-        <tr>
-          <td>
-            {{ \Carbon\Carbon::parse($attendance->date)
-              ->locale('ja')
-              ->translatedFormat('m/d(D)') }}
-          </td>
-          <td>{{ $attendance->clock_in ?? '' }}</td>
-          <td>{{ $attendance->clock_out ?? '' }}</td>
-          <td>{{ $fmt($breakMinutes) }}</td>
-          <td>{{ $fmt($workMinutes) }}</td>
-          <td> <a href="{{ route('attendance.detail', $attendance->id) }}">詳細</a></td>
-        </tr>
-        @endforeach
+    $totalMinutes = max(0, $workMinutes - $breakMinutes);
+}
+
+$fmt = fn($m) =>
+    $m !== null
+    ? floor($m/60).':'.sprintf('%02d',$m%60)
+    : '';
+@endphp
+
+<tr>
+<td>
+{{ \Carbon\Carbon::parse($attendance->date)
+    ->locale('ja')
+    ->translatedFormat('m/d(D)') }}
+</td>
+
+<td>
+{{ $display->clock_in
+    ? \Carbon\Carbon::parse($display->clock_in)->format('H:i')
+    : '' }}
+</td>
+
+<td>
+{{ $display->clock_out
+    ? \Carbon\Carbon::parse($display->clock_out)->format('H:i')
+    : '' }}
+</td>
+
+<td>{{ $fmt($breakMinutes) }}</td>
+
+<td>{{ $fmt($totalMinutes) }}</td>
+
+<td>
+<a href="{{ route('attendance.detail', $attendance->id) }}">
+詳細
+</a>
+</td>
+
+</tr>
+@endforeach
+
       </tbody>
     </table>
   </main>

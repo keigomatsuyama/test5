@@ -7,13 +7,10 @@
     <title>メール認証</title>
     <link rel="stylesheet" href="/css/verify.css">
 </head>
-  <img src="{{ asset('images/logo.png') }}" alt="ロゴ">
 <body>
 
     <header class="header">
-        <a href="/login">
             <img src="/images/logo.png" class="logo">
-        </a>
     </header>
 
     <div class="container">

@@ -60,57 +60,82 @@
           <th>詳細</th>
         </tr>
       </thead>
-      <tbody>
-        @foreach ($users as $user)
-        @php
-        $attendance = $user->attendances->first();
-        $breakMinutes = 0;
+      <tbody>@foreach ($users as $user)
+@php
+$attendance = $user->attendances->first();
+$display = null;
+$breakMinutes = 0;
+$totalMinutes = 0;
 
-        if ($attendance) {
-        $breakMinutes = $attendance->breaks->sum(function ($break) {
+if ($attendance) {
+
+    $latestRequest = $attendance->attendanceRequests
+        ->sortByDesc('id')
+        ->first();
+
+    $display = $latestRequest ?? $attendance;
+
+    // 休憩合計
+    $breakMinutes = $display->breaks->sum(function ($break) {
         if (!$break->break_end) return 0;
-        return \Carbon\Carbon::parse($break->break_end)
-        ->diffInMinutes(\Carbon\Carbon::parse($break->break_start));
-        });
-        }
-        @endphp
 
-        <tr>
-          <td>{{ $user->name }}</td>
-          <td>{{ $attendance?->clock_in ?? '-' }}</td>
-          <td>{{ $attendance?->clock_out ?? '-' }}</td>
-          <td>
-            {{ $attendance ? sprintf('%d:%02d', intdiv($breakMinutes,60), $breakMinutes%60) : '-' }}
-          </td>
-          <td>
-            @if ($attendance && $attendance->clock_in && $attendance->clock_out)
-            {{ sprintf(
-          '%d:%02d',
-          intdiv(
-            \Carbon\Carbon::parse($attendance->clock_out)
-              ->diffInMinutes(\Carbon\Carbon::parse($attendance->clock_in)) - $breakMinutes,
-            60
-          ),
-          (
-            \Carbon\Carbon::parse($attendance->clock_out)
-              ->diffInMinutes(\Carbon\Carbon::parse($attendance->clock_in)) - $breakMinutes
-          ) % 60
-        ) }}
-            @else
-            -
-            @endif
-          </td>
-          <td>
-            @if ($attendance)
-            <a href="{{ route('admin.attendances.detail', $attendance->id) }}" class="detail-link">
-              詳細
-            </a>
-            @else
-            -
-            @endif
-          </td>
-        </tr>
-        @endforeach
+        return \Carbon\Carbon::parse($break->break_end)
+            ->diffInMinutes(\Carbon\Carbon::parse($break->break_start));
+    });
+
+    // 勤務合計
+    if ($display->clock_in && $display->clock_out) {
+
+        $workMinutes =
+            \Carbon\Carbon::parse($display->clock_out)
+            ->diffInMinutes(\Carbon\Carbon::parse($display->clock_in));
+
+        // マイナス防止
+        $totalMinutes = max(0, $workMinutes - $breakMinutes);
+    }
+}
+@endphp
+
+<tr>
+<td>{{ $user->name }}</td>
+
+<td>
+{{ $display && $display->clock_in
+    ? \Carbon\Carbon::parse($display->clock_in)->format('H:i')
+    : '-' }}
+</td>
+
+<td>
+{{ $display && $display->clock_out
+    ? \Carbon\Carbon::parse($display->clock_out)->format('H:i')
+    : '-' }}
+</td>
+
+<td>
+{{ $display
+    ? sprintf('%d:%02d', intdiv($breakMinutes,60), $breakMinutes%60)
+    : '-' }}
+</td>
+
+<td>
+{{ $display
+    ? sprintf('%d:%02d', intdiv($totalMinutes,60), $totalMinutes%60)
+    : '-' }}
+</td>
+
+<td>
+@if ($attendance)
+<a href="{{ route('admin.attendances.detail', $attendance->id) }}" class="detail-link">
+詳細
+</a>
+@else
+-
+@endif
+</td>
+
+</tr>
+@endforeach
+
       </tbody>
 
     </table>

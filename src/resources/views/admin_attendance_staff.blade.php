@@ -34,6 +34,7 @@
       ← 前月
     </a>
 
+
     <div class="month-center">
       📅 {{ $month->format('Y/m') }}
     </div>
@@ -64,58 +65,90 @@
       </thead>
       <tbody>
         @foreach ($attendances as $attendance)
-          @php
-            $breakMinutes = $attendance->breaks->sum(function ($break) {
-              if (!$break->break_end) return 0;
-              return \Carbon\Carbon::parse($break->break_end)
-                ->diffInMinutes(\Carbon\Carbon::parse($break->break_start));
-            });
 
-            $workMinutes = null;
-            if ($attendance->clock_in && $attendance->clock_out) {
-              $workMinutes =
-                \Carbon\Carbon::parse($attendance->clock_out)
-                  ->diffInMinutes(\Carbon\Carbon::parse($attendance->clock_in))
-                - $breakMinutes;
-            }
-          @endphp
+@php
+$display = $attendance;
 
-          <tr>
-            <td>
-              {{ \Carbon\Carbon::parse($attendance->date)->translatedFormat('m/d(D)') }}
-            </td>
+// 最新の修正申請を取得
+$latestRequest = $attendance->attendanceRequests
+    ->sortByDesc('id')
+    ->first();
 
-            <td>{{ $attendance->clock_in ?? '-' }}</td>
-            <td>{{ $attendance->clock_out ?? '-' }}</td>
+// 申請があればそれを優先表示
+if ($latestRequest) {
+    $display = $latestRequest;
+}
 
-            <td>
-              {{ $breakMinutes ? sprintf('%d:%02d', intdiv($breakMinutes,60), $breakMinutes%60) : '-' }}
-            </td>
+// 休憩計算
+$breakMinutes = $display->breaks->sum(function ($break) {
+    if (!$break->break_end) return 0;
 
-            <td>
-              {{ $workMinutes !== null
-                  ? sprintf('%d:%02d', intdiv($workMinutes,60), $workMinutes%60)
-                  : '-' }}
-            </td>
+    return \Carbon\Carbon::parse($break->break_end)
+        ->diffInMinutes(\Carbon\Carbon::parse($break->break_start));
+});
 
-            <td>
-              <a
-                href="{{ route('admin.attendances.detail', $attendance->id) }}"
-                class="detail"
-              >
-                詳細
-              </a>
-            </td>
-          </tr>
-        @endforeach
+// 勤務時間計算（マイナス防止）
+$workMinutes = null;
+if ($display->clock_in && $display->clock_out) {
+
+    $work =
+        \Carbon\Carbon::parse($display->clock_out)
+        ->diffInMinutes(\Carbon\Carbon::parse($display->clock_in));
+
+    $workMinutes = max(0, $work - $breakMinutes);
+}
+@endphp
+
+<tr>
+<td>
+{{ \Carbon\Carbon::parse($attendance->date)->translatedFormat('m/d(D)') }}
+</td>
+
+<td>
+{{ $display->clock_in
+    ? \Carbon\Carbon::parse($display->clock_in)->format('H:i')
+    : '-' }}
+</td>
+
+<td>
+{{ $display->clock_out
+    ? \Carbon\Carbon::parse($display->clock_out)->format('H:i')
+    : '-' }}
+</td>
+
+<td>
+{{ sprintf('%d:%02d', intdiv($breakMinutes,60), $breakMinutes%60) }}
+</td>
+
+<td>
+{{ $workMinutes !== null
+    ? sprintf('%d:%02d', intdiv($workMinutes,60), $workMinutes%60)
+    : '-' }}
+</td>
+
+<td>
+<a href="{{ route('admin.attendances.detail', $attendance->id) }}" class="detail">
+詳細
+</a>
+</td>
+
+</tr>
+@endforeach
+
       </tbody>
     </table>
   </div>
 
   {{-- CSV --}}
-  <div class="csv-area">
-    <button class="csv-btn">CSV出力</button>
-  </div>
+<div class="csv-area">
+  <a href="{{ route('admin.attendance.csv', [
+      'id' => $user->id,
+      'month' => $month->format('Y-m')
+  ]) }}" class="csv-btn">
+      CSV出力
+  </a>
+</div>
+
 
 </main>
 

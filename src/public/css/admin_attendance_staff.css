@@ -125,3 +125,7 @@ tbody tr:last-child td {
   font-size: 13px;
   cursor: pointer;
 }
+.table-wrapper table th,
+.table-wrapper table td {
+  text-align: center;
+}

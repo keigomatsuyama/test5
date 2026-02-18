@@ -20,7 +20,7 @@
     {{-- メールアドレス --}}
     <label>メールアドレス</label>
     <input
-      type="email"
+      type="text"
       name="email"
       value="{{ old('email') }}"
       class="@error('email') is-error @enderror"

@@ -1,0 +1,5 @@
+/docker/mysql/data
+/src/storage
+/vendor
+.env
+*.log

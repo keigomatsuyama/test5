@@ -14,7 +14,10 @@ class RequestBreak extends Model
         'break_end',
         'order',
     ];
-
+  protected $casts = [
+        'break_start' => 'datetime:H:i',
+        'break_end'   => 'datetime:H:i',
+    ];
     public function attendanceRequest()
     {
         return $this->belongsTo(

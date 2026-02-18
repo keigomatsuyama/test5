@@ -1,93 +1,111 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
-  <title>勤怠詳細</title>
+  <title>申請一覧 | COACHTECH</title>
   <link rel="stylesheet" href="{{ asset('css/stamp_approve.css') }}">
 </head>
+
 <body>
+
 <header class="header">
-  <div class="header-left">
-    <img src="{{ asset('images/logo.png') }}" alt="COACHTECH">
-  </div>
+  <img src="{{ asset('images/logo.png') }}" alt="ロゴ">
 
   <nav class="header-nav">
     <a href="{{ route('admin.attendances.index') }}">勤怠一覧</a>
     <a href="{{ route('admin.staff.list') }}">スタッフ一覧</a>
     <a href="{{ route('admin.stamp.index') }}">申請一覧</a>
-
-    <form method="POST" action="{{ route('logout') }}">
+    <a href="{{ route('logout') }}"
+       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+      ログアウト
+    </a>
+    <form id="logout-form"  action="{{ route('logout') }}" method="POST" style="display:none;">
       @csrf
-      <button class="logout-btn">ログアウト</button>
     </form>
   </nav>
 </header>
 
 <main class="container">
+  <h1 class="title">勤怠詳細</h1>
 
-  <h1 class="title">｜ 勤怠詳細</h1>
+  <div class="card">
 
-  <div class="detail-card">
-    <table class="detail-table">
-      <tr>
-        <th>名前</th>
-        <td colspan="3">{{ $attendance->user->name }}</td>
-      </tr>
+    {{-- 名前 --}}
+    <div class="row">
+      <div class="label">名前</div>
+      <div class="value">{{ $attendance->user->name }}</div>
+    </div>
 
-      <tr>
-        <th>日付</th>
-        <td>{{ \Carbon\Carbon::parse($attendance->date)->format('Y年') }}</td>
-        <td colspan="2">{{ \Carbon\Carbon::parse($attendance->date)->format('n月j日') }}</td>
-      </tr>
+    {{-- 日付 --}}
+    <div class="row">
+      <div class="label">日付</div>
+      <div class="value">
+           {{ \Carbon\Carbon::parse($attendance->date)->locale('ja')->translatedFormat('Y年n月j日(D)') }}
+      </div>
+    </div>
 
-      <tr>
-        <th>出勤・退勤</th>
-        <td>{{ $attendance->clock_in }}</td>
-        <td class="center">〜</td>
-        <td>{{ $attendance->clock_out }}</td>
-      </tr>
-
-      {{-- 休憩1 --}}
-      @php $break1 = $attendance->breaks->get(0); @endphp
-      <tr>
-        <th>休憩</th>
-        <td>{{ $break1?->break_start }}</td>
-        <td class="center">〜</td>
-        <td>{{ $break1?->break_end }}</td>
-      </tr>
-
-      {{-- 休憩2 --}}
-      @php $break2 = $attendance->breaks->get(1); @endphp
-      <tr>
-        <th>休憩2</th>
-        <td>{{ $break2?->break_start }}</td>
-        <td class="center"></td>
-        <td>{{ $break2?->break_end }}</td>
-      </tr>
-
-      <tr>
-        <th>備考</th>
-        <td colspan="3">{{ $attendance->remark }}</td>
-      </tr>
-    </table>
+    {{-- 出勤・退勤 --}}
+   {{-- 出勤・退勤 --}}
+<div class="row">
+  <div class="label">出勤・退勤</div>
+<div class="value">
+    <div class="split">
+    <input type="text" name="clock_in" value="{{ optional($request->clock_in)->format('H:i') }}" readonly>
+    〜
+    <input type="text" name="clock_out" value="{{ optional($request->clock_out)->format('H:i') }}" readonly>
   </div>
-  {{-- 管理者のみ表示 --}}
+</div>
+    </div>
+
+   @php
+  $break1 = $request->breaks->get(0);
+  $break2 = $request->breaks->get(1);
+@endphp
+
+
+    {{-- 休憩 --}}
+    <div class="row">
+      <div class="label">休憩</div>
+      <div class="value split">
+        <input type="text" name="breaks[0][break_start]" value="{{ optional($break1?->break_start)->format('H:i') }}" readonly>
+        〜
+        <input type="text" name="breaks[0][break_end]" value="{{ optional($break1?->break_end)->format('H:i') }}" readonly>
+      </div>
+    </div>
+
+    {{-- 休憩2 --}}
+    <div class="row">
+      <div class="label">休憩2</div>
+      <div class="value split">
+        <input type="text" name="breaks[1][break_start]" value="{{ optional($break2?->break_start)->format('H:i') }}" readonly>
+        〜
+        <input type="text" name="breaks[1][break_end]" value="{{ optional($break2?->break_end)->format('H:i') }}" readonly>
+      </div>
+    </div>
+<div class="card">
+    {{-- 備考 --}}
+    <div class="row">
+      <div class="label">備考</div>
+      <div class="value">
+        <textarea name="remark" readonly>{{ $request->remark }}</textarea>
+
+      </div>
+    </div>
+
+  </div>
+
+  {{-- 承認ボタン --}}
   @if(auth()->user()->is_admin)
     <div class="button-area">
-
       @if($request->status === 'pending')
-        <!-- 承認前 -->
-        <form method="POST"
-              action="{{ route('admin.stamp.approve', $request->id) }}">
+        <form method="POST" action="{{ route('admin.stamp.approve', $request->id) }}">
           @csrf
-          <button type="submit" class="approve-btn">承認</button>
+          <button class="btn-black">承認</button>
         </form>
-
-      @elseif($request->status === 'approved')
-        <!-- 承認済み -->
-        <button class="approved-btn" disabled>承認済み</button>
+      @else
+        <span class="approved-btn">承認済み</span>
       @endif
-
     </div>
   @endif
 

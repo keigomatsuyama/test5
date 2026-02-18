@@ -1,127 +1,162 @@
-
-/* ===== Reset ===== */
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
 body {
-  background: #f5f5f5;
-  color: #333;
+    background-color: #f5f5f5;
+    color: #333;
 }
 
 /* ===== Header ===== */
 .header {
-  background-color: #000;
-  color: #fff;
-  height: 60px;
-  padding: 0 40px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    background-color: #000;
+    color: #fff;
+    height: 60px;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.header img {
+    height: 24px;
+}
+.header-left {
+    font-weight: bold;
+    font-size: 20px;
+    letter-spacing: 1px;
 }
 
-/* ロゴ */
-.header-left img {
+.header-nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 24px;
+    font-size: 14px;
+}
+.header img {
   height: 24px;
 }
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+}
 
-/* ナビ全体 */
-.header-nav {
+.nav {
   display: flex;
   align-items: center;
-  gap: 30px;
 }
 
-/* ナビリンク */
-.header-nav a {
+.nav a {
   color: #fff;
   text-decoration: none;
+  margin-left: 24px;
   font-size: 14px;
-  font-weight: 500;
 }
 
-/* ログアウト */
-.logout-btn {
-  all: unset;
+.logout-link {
+  background: none;
+  border: none;
   color: #fff;
   font-size: 14px;
-  font-weight: 500;
+  margin-left: 24px;
   cursor: pointer;
 }
 
-/* hover */
-.header-nav a:hover,
-.logout-btn:hover {
-  opacity: 0.8;
-}
-
-/* メイン */
+/* ===== メイン ===== */
 .container {
   max-width: 900px;
   margin: 40px auto;
 }
 
 .title {
-  font-size: 18px;
-  margin-bottom: 24px;
+  font-size: 20px;
+  margin-bottom: 20px;
 }
 
-/* カード */
-.detail-card {
-  background: #fff;
-  border-radius: 6px;
-  padding: 24px;
+/* ===== カード ===== */
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-/* テーブル */
-.detail-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.detail-table th {
-  width: 20%;
-  text-align: left;
-  font-weight: normal;
-  color: #666;
-  padding: 14px;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.detail-table td {
-  padding: 14px;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.detail-table .center {
-  text-align: center;
-  width: 40px;
-}
-
-/* ボタン */
-.button-area {
+.row {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 24px;
+  padding: 20px;
+  border-bottom: 1px solid #e5e5e5;
 }
 
-.button-area button {
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 10px 28px;
-  border-radius: 4px;
-  cursor: pointer;
+.row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  width: 150px;
+  color: #777;
   font-size: 14px;
 }
 
-.button-area button:hover {
-  opacity: 0.85;
+.value {
+  flex: 1;
+  font-size: 14px;
 }
+
+.split {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+input {
+  width: 80px;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+  background-color: #fafafa;
+}
+
+textarea {
+  width: 100%;
+  height: 60px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: none;
+  background-color: #fafafa;
+}
+
+/* ===== ボタン ===== */
+.button-area {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-black {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 12px 40px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.pending-message {
+  color: #ff6b6b;          /* 画像に近い薄赤 */
+  font-size: 14px;
+  margin-top: 20px;
+  text-align: right;       /* 右寄せ */
+  padding-right: 20px;     /* カードと少し間隔 */
+}
+.error-message {
+  color:red;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 12px;
+}
+
 .approved-btn {
   background-color: #777;
   color: #fff;
@@ -130,8 +165,11 @@ body {
   border: none;
   cursor: default;
 }
-.approved-btn:disabled {
-  background-color: #6f6f6f;
-  color: #ffffff;
-  opacity: 1; /* ← これが超重要 */
+/* ===== 表示専用（カッコ完全除去） ===== */
+
+/* 念のためフォーカスも完全無効 */
+input:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: none;
 }

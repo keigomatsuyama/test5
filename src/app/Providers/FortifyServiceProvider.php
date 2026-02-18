@@ -2,31 +2,32 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\ServiceProvider;
+use Laravel\Fortify\Fortify;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\ServiceProvider;
-use Laravel\Fortify\Fortify;
 use App\Actions\Fortify\CreateNewUser;
-use App\Http\Requests\LoginRequest;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
 class FortifyServiceProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-        //
-    }
-
     public function boot(): void
     {
-        Fortify::registerView(fn() => view('auth.register'));
-        Fortify::loginView(fn() => view('auth.login'));
-        Fortify::verifyEmailView(fn() => view('auth.verify'));
+        // ログイン画面
+        Fortify::loginView(fn () => view('auth.login'));
+
+        // 会員登録画面
+        Fortify::registerView(fn () => view('auth.register'));
+
+        // ★ メール認証画面（ここが本命）
+        Fortify::verifyEmailView(fn () => view('auth.verify'));
+
+        // ユーザー作成処理
         Fortify::createUsersUsing(CreateNewUser::class);
+
+        // ログイン制限
         RateLimiter::for('login', function (Request $request) {
-            return Limit::perMinute(10)->by($request->email . $request->ip());
+            return Limit::perMinute(10)->by($request->email.$request->ip());
         });
     }
 }

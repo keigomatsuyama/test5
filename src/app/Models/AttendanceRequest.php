@@ -21,6 +21,10 @@ class AttendanceRequest extends Model
         'remark',
         'status',
     ];
+protected $casts = [
+    'clock_in' => 'datetime:H:i',
+    'clock_out' => 'datetime:H:i',
+];
 
     public function user()
     {

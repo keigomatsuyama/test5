@@ -45,16 +45,15 @@
         {{ \Carbon\Carbon::parse($attendance->date)->locale('ja')->translatedFormat('Y年n月j日(D)') }}
       </div>
     </div>
-
-    {{-- 出勤・退勤 --}}
+{{-- 出勤・退勤 --}}
     <div class="row">
       <div class="label">出勤・退勤</div>
       <div class="value split">
-        <input type="time" name="clock_in"
+        <input type="text" name="clock_in"
           value="{{ old('clock_in', optional($display->clock_in)->format('H:i')) }}"
           {{ $isEdit ? '' : 'readonly' }}>
         〜
-        <input type="time" name="clock_out"
+        <input type="text" name="clock_out"
           value="{{ old('clock_out', optional($display->clock_out)->format('H:i')) }}"
           {{ $isEdit ? '' : 'readonly' }}>
       </div>
@@ -74,11 +73,11 @@
     <div class="row">
       <div class="label">休憩1</div>
       <div class="value split">
-        <input type="time" name="breaks[0][break_start]"
+        <input type="text" name="breaks[0][break_start]"
           value="{{ old('breaks.0.break_start', optional($break1?->break_start)->format('H:i')) }}"
           {{ $isEdit ? '' : 'readonly' }}>
         〜
-        <input type="time" name="breaks[0][break_end]"
+        <input type="text" name="breaks[0][break_end]"
           value="{{ old('breaks.0.break_end', optional($break1?->break_end)->format('H:i')) }}"
           {{ $isEdit ? '' : 'readonly' }}>
       </div>
@@ -90,11 +89,11 @@
     <div class="row">
       <div class="label">休憩2</div>
       <div class="value split">
-        <input type="time" name="breaks[1][break_start]"
+        <input type="text" name="breaks[1][break_start]"
           value="{{ old('breaks.1.break_start', optional($break2?->break_start)->format('H:i')) }}"
           {{ $isEdit ? '' : 'readonly' }}>
         〜
-        <input type="time" name="breaks[1][break_end]"
+        <input type="text" name="breaks[1][break_end]"
           value="{{ old('breaks.1.break_end', optional($break2?->break_end)->format('H:i')) }}"
           {{ $isEdit ? '' : 'readonly' }}>
       </div>

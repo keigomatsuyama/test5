@@ -14,7 +14,7 @@
     @if ($attendance->status === 3)
       {{-- 退勤後 --}}
       <a href="{{ route('attendance.list') }}">今月の出勤一覧</a>
-      <a >申請</a>
+      <a href="{{ route('stamp.index') }}">申請</a>
     @else
       {{-- 通常 --}}
       <a href="{{ route('attendance.index') }}">勤怠</a>
