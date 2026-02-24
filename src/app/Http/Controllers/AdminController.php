@@ -246,21 +246,22 @@ public function export(Request $request, $id)
         'remark'    => $request->remark,
     ]);
 
-    // 休憩更新
-    foreach ($request->breaks ?? [] as $index => $break) {
-        if (empty($break['break_start']) || empty($break['break_end'])) {
-            continue;
-        }
+    // 🔥 既存の休憩を全削除
+    $attendance->breaks()->delete();
 
-        $attendance->breaks()->updateOrCreate(
-            ['id' => $attendance->breaks[$index]->id ?? null],
-            [
+    // 🔥 入力された休憩だけ再登録
+    foreach ($request->breaks ?? [] as $break) {
+
+        if (!empty($break['break_start']) && !empty($break['break_end'])) {
+
+            $attendance->breaks()->create([
                 'break_start' => $break['break_start'],
                 'break_end'   => $break['break_end'],
-            ]
-        );
+            ]);
+        }
     }
 
+    // 🔥 ループの外に置く
     return redirect()
         ->route('admin.attendances.index')
         ->with('success', '勤怠を修正しました');

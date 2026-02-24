@@ -110,22 +110,27 @@ $fmt = fn($m) =>
 <td>
 {{ $display->clock_in
     ? \Carbon\Carbon::parse($display->clock_in)->format('H:i')
-    : '' }}
+    : '-' }}
 </td>
 
 <td>
 {{ $display->clock_out
     ? \Carbon\Carbon::parse($display->clock_out)->format('H:i')
-    : '' }}
+    : '-' }}
 </td>
 
-<td>{{ $fmt($breakMinutes) }}</td>
+<td>{{ $breakMinutes ? $fmt($breakMinutes) : '-' }}</td>
 
-<td>{{ $fmt($totalMinutes) }}</td>
+<td>{{ $totalMinutes ? $fmt($totalMinutes) : '-' }}</td>
 
 <td>
-<a href="{{ route('attendance.detail', $attendance->id) }}">
-詳細
+@if ($attendance->clock_out)
+    <a href="{{ route('attendance.detail', $attendance->id) }}">
+        詳細
+    </a>
+@else
+    -
+@endif
 </a>
 </td>
 

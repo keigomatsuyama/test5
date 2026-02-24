@@ -60,46 +60,86 @@
     </div>
 
     {{-- 出勤・退勤エラー（1回だけ表示） --}}
-    @if ($errors->has('clock_in') || $errors->has('clock_out'))
-      <p class="error-message">出勤時間もしくは退勤時間が不適切な値です</p>
-    @endif
+@error('clock_in')
+  <p class="error-message">{{ $message }}</p>
+@enderror
 
-    @php
-      $break1 = $display->breaks->get(0);
-      $break2 = $display->breaks->get(1);
-    @endphp
+@php
+    $breaks = old('breaks', $display->breaks ?? []);
 
-    {{-- 休憩1 --}}
-    <div class="row">
-      <div class="label">休憩1</div>
-      <div class="value split">
-        <input type="text" name="breaks[0][break_start]"
-          value="{{ old('breaks.0.break_start', optional($break1?->break_start)->format('H:i')) }}"
-          {{ $isEdit ? '' : 'readonly' }}>
-        〜
-        <input type="text" name="breaks[0][break_end]"
-          value="{{ old('breaks.0.break_end', optional($break1?->break_end)->format('H:i')) }}"
-          {{ $isEdit ? '' : 'readonly' }}>
-      </div>
-    </div>
-    @error('breaks.0.break_start') <p class="error-message">{{ $message }}</p> @enderror
-    @error('breaks.0.break_end')   <p class="error-message">{{ $message }}</p> @enderror
+    // Collectionなら配列に変換
+    if ($breaks instanceof \Illuminate\Support\Collection) {
+        $breaks = $breaks->toArray();
+    }
 
-    {{-- 休憩2 --}}
-    <div class="row">
-      <div class="label">休憩2</div>
-      <div class="value split">
-        <input type="text" name="breaks[1][break_start]"
-          value="{{ old('breaks.1.break_start', optional($break2?->break_start)->format('H:i')) }}"
-          {{ $isEdit ? '' : 'readonly' }}>
-        〜
-        <input type="text" name="breaks[1][break_end]"
-          value="{{ old('breaks.1.break_end', optional($break2?->break_end)->format('H:i')) }}"
-          {{ $isEdit ? '' : 'readonly' }}>
-      </div>
-    </div>
-    @error('breaks.1.break_start') <p class="error-message">{{ $message }}</p> @enderror
-    @error('breaks.1.break_end')   <p class="error-message">{{ $message }}</p> @enderror
+    $breaks = array_filter($breaks, function($break) {
+        return !empty($break['break_start']) || !empty($break['break_end']);
+    });
+
+    $breaks = array_values($breaks);
+@endphp
+
+@foreach ($breaks as $index => $break)
+@endforeach
+@php
+    $newIndex = count($breaks);
+@endphp
+@foreach ($breaks as $index => $break)
+<div class="row">
+  <div class="label"> {{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</div>
+  <div class="value split">
+    <input type="text"
+      name="breaks[{{ $index }}][break_start]"
+      value="{{ old("breaks.$index.break_start",
+        isset($display->breaks[$index])
+          ? optional($display->breaks[$index]->break_start)->format('H:i')
+          : ''
+      ) }}"
+      {{ $isEdit ? '' : 'readonly' }}>
+
+    〜
+
+    <input type="text"
+      name="breaks[{{ $index }}][break_end]"
+      value="{{ old("breaks.$index.break_end",
+        isset($display->breaks[$index])
+          ? optional($display->breaks[$index]->break_end)->format('H:i')
+          : ''
+      ) }}"
+      {{ $isEdit ? '' : 'readonly' }}>
+  </div>
+</div>
+
+@error("breaks.$index.break_start")
+  <p class="error-message">{{ $message }}</p>
+@enderror
+
+@error("breaks.$index.break_end")
+  <p class="error-message">{{ $message }}</p>
+@enderror
+@endforeach
+@php
+    $newIndex = count($breaks);
+@endphp
+
+<div class="row">
+  <div class="label">
+    {{ $newIndex === 0 ? '休憩' : '休憩' . ($newIndex + 1) }}
+  </div>
+  <div class="value split">
+    <input type="text"
+      name="breaks[{{ $newIndex }}][break_start]"
+      value="{{ old("breaks.$newIndex.break_start") }}"
+      {{ $isEdit ? '' : 'readonly' }}>
+
+    〜
+
+    <input type="text"
+      name="breaks[{{ $newIndex }}][break_end]"
+      value="{{ old("breaks.$newIndex.break_end") }}"
+      {{ $isEdit ? '' : 'readonly' }}>
+  </div>
+</div>
 
     {{-- 備考 --}}
     <div class="row">
@@ -113,25 +153,23 @@
   </div>
 
   {{-- ボタン --}}
-  <div class="button-area">
+ <div class="button-area">
+
     @if ($isApproved)
-      <span class="approved-btn">承認済み</span>
+        <span class="approved-btn">承認済み</span>
 
     @elseif ($isPending)
-      <p class="pending-message">※承認待ちのため修正はできません。</p>
-
-    @elseif ($isEdit)
-      <button type="submit" class="btn-black">修正申請</button>
+        <p class="pending-message">
+            ※承認待ちのため修正はできません。
+        </p>
 
     @else
-      <a href="{{ route('attendance.detail', $attendance->id) }}?edit=1"
-         class="btn-black">修正</a>
+        <button type="submit" class="btn-black">修正</button>
     @endif
-  </div>
 
-  @if ($isEdit)
+</div>
+
   </form>
-  @endif
 
 </main>
 </body>

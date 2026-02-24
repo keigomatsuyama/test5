@@ -9,18 +9,19 @@
 
 <body>
 
-  <header class="header">
-    <img src="{{ asset('images/logo.png') }}" alt="ロゴ">
-    <nav class="nav">
-      <a href="{{ route('attendance.index') }}">勤怠</a>
-      <a href="{{ route('attendance.list') }}">勤怠一覧</a>
-      <a href="{{ route('stamp.index') }}">申請</a>
-      <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button class="logout-link">ログアウト</button>
-      </form>
-    </nav>
-  </header>
+<header class="header">
+  <img src="{{ asset('images/logo.png') }}" alt="ロゴ">
+  <nav class="nav">
+    <a href="{{ route('attendance.index') }}">勤怠</a>
+    <a href="{{ route('attendance.list') }}">勤怠一覧</a>
+    <a href="{{ route('stamp.index') }}">申請</a>
+    <form method="POST" action="{{ route('logout') }}">
+      @csrf
+      <button class="logout-link">ログアウト</button>
+    </form>
+  </nav>
+</header>
+
 
   <main class="container">
     <h1 class="title">申請一覧</h1>

@@ -13,7 +13,10 @@
     <a href="{{ route('admin.attendances.index') }}">勤怠一覧</a>
     <a href="{{ route('admin.staff.list') }}">スタッフ一覧</a>
     <a href="{{ route('admin.stamp.index') }}">申請一覧</a>
-    <a href="">ログアウト</a>
+     <a href="{{ route('logout') }}"
+       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+      ログアウト
+    </a>
   </nav>
 </header>
 
@@ -117,19 +120,27 @@ if ($display->clock_in && $display->clock_out) {
 </td>
 
 <td>
-{{ sprintf('%d:%02d', intdiv($breakMinutes,60), $breakMinutes%60) }}
+{{ $breakMinutes != null 
+    ? sprintf('%d:%02d', intdiv($breakMinutes, 60), $breakMinutes % 60) 
+    : '-' 
+}}
 </td>
 
 <td>
 {{ $workMinutes !== null
-    ? sprintf('%d:%02d', intdiv($workMinutes,60), $workMinutes%60)
-    : '-' }}
+    ? sprintf('%d:%02d', intdiv($workMinutes, 60), $workMinutes % 60)
+    : '-'
+}}
 </td>
 
 <td>
-<a href="{{ route('admin.attendances.detail', $attendance->id) }}" class="detail">
-詳細
-</a>
+@if ($attendance && ( $attendance->clock_out))
+    <a href="{{ route('admin.attendances.detail', $attendance->id) }}" class="detail">
+        詳細
+    </a>
+@else
+    -
+@endif
 </td>
 
 </tr>

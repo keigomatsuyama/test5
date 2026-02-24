@@ -1,34 +1,38 @@
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: "Helvetica Neue", Arial, sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
 body {
-    background: #f5f5f5;
-    color: #333;
+  background: #f5f5f5;
+  color: #333;
 }
 
-/* ===== ヘッダー ===== */
+/* ヘッダー */
 .header {
-    background-color: #000;
-    color: #fff;
-    padding: 15px 40px;
-    display: flex;
-    height: 60px;
-    justify-content: space-between;
-    align-items: center;
+  background-color: #000;
+  color: #fff;
+  height: 60px;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .header img {
-    height: 24px;
+  height: 24px;
+}
+.header-left {
+  font-size: 22px;
+  font-weight: bold;
 }
 
 .header-nav a {
-    color: #fff;
-    text-decoration: none;
-    margin-left: 30px;
-    font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  margin-left: 30px;
+  font-size: 14px;
 }
 
 /* ===== メイン ===== */
@@ -39,93 +43,102 @@ body {
 
 .title {
     font-size: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 /* ===== カード ===== */
-.detail-card {
+.card {
     background-color: #fff;
-    border-radius: 6px;
-    padding: 30px;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-/* ===== テーブル ===== */
-.detail-table {
-    width: 100%;
-    border-collapse: collapse;
+.row {
+    display: flex;
+    padding: 20px;
+    border-bottom: 1px solid #e5e5e5;
 }
 
-.detail-table th {
-    width: 180px;
-    text-align: left;
-    padding: 15px;
-    font-weight: normal;
-    color: #555;
+.row:last-child {
+    border-bottom: none;
 }
 
-.detail-table td {
-    padding: 15px;
+.label {
+    width: 150px;
+    color: #777;
+    font-size: 14px;
 }
 
-.detail-table tr {
-    border-bottom: 1px solid #e0e0e0;
+.value {
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-/* ▼ 通常input（textarea含む） */
-.detail-table input:not(.time-input) {
-    width: 100%;
+.split {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+input {
+    width: 80px;
     padding: 6px 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    text-align: left;
-}
-
-.detail-table textarea {
-    width: 100%;
-    height: 80px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 10px;
-    line-height: 1.6;
-      vertical-align: top;
-}
-
-/* ▼ 時刻入力（共通UI） */
-.time-input {
-    width: 90px;
-    height: 36px;
     border: 1px solid #ddd;
     border-radius: 4px;
     text-align: center;
-    font-size: 14px;
-    font-weight: bold;
-    background-color: #fff;
+    background-color: #fafafa;
 }
 
-.time-separator {
-    text-align: center;
-    width: 40px;
+textarea {
+    width: 100%;
+    height: 60px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: none;
+    background-color: #fafafa;
 }
 
 /* ===== ボタン ===== */
 .button-area {
-    text-align: right;
-    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
 }
 
-.edit-btn {
+.btn-black {
     background-color: #000;
     color: #fff;
-    padding: 10px 30px;
     border: none;
-    border-radius: 4px;
+    padding: 12px 40px;
+    border-radius: 8px;
     cursor: pointer;
 }
-
-/* ===== エラー ===== */
+.pending-message {
+    color: #ff6b6b; /* 画像に近い薄赤 */
+    font-size: 14px;
+    margin-top: 20px;
+    text-align: right; /* 右寄せ */
+    padding-right: 20px; /* カードと少し間隔 */
+}
 .error-message {
     color: red;
     font-size: 14px;
     margin-top: 5px;
     margin-bottom: 12px;
+}
+.error-row {
+    padding: 0 20px 12px 20px;
+    border-bottom: none; /* 下線消す */
+}
+
+.approved-btn {
+    background-color: #777;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: default;
 }

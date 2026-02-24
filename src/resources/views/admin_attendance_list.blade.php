@@ -112,24 +112,23 @@ if ($attendance) {
 </td>
 
 <td>
-{{ $display
-    ? sprintf('%d:%02d', intdiv($breakMinutes,60), $breakMinutes%60)
-    : '-' }}
+{{ empty($breakMinutes)
+    ? '-'
+    : sprintf('%d:%02d', intdiv($breakMinutes, 60), $breakMinutes % 60) }}
+
+<td>
+{{ empty($totalMinutes)
+    ? '-'
+    : sprintf('%d:%02d', intdiv($totalMinutes, 60), $totalMinutes % 60) }}
 </td>
 
 <td>
-{{ $display
-    ? sprintf('%d:%02d', intdiv($totalMinutes,60), $totalMinutes%60)
-    : '-' }}
-</td>
-
-<td>
-@if ($attendance)
-<a href="{{ route('admin.attendances.detail', $attendance->id) }}" class="detail-link">
-詳細
-</a>
+@if ($display && ($display->clock_out))
+    <a href="{{ route('admin.attendances.detail', $attendance->id) }}" class="detail-link">
+        詳細
+    </a>
 @else
--
+    -
 @endif
 </td>
 

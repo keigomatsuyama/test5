@@ -95,7 +95,6 @@ class AttendanceController extends Controller
     $query = Attendance::with(['breaks', 'user'])
         ->whereMonth('date', $month->month)
         ->whereYear('date', $month->year);
-
     if (Auth::user()->is_admin) {
         // ★ 管理者：一般ユーザーのみ表示
         $query->whereHas('user', function ($q) {
@@ -136,11 +135,7 @@ public function detail(Request $request, $id)
 } else {
     $display = $isPending ? $latestRequest : $attendance;
 }
-    $isEdit = (
-    $request->query('edit') === '1'
-    || session()->has('errors')
-) && !$isPending && !$isApproved;
-
+    $isEdit = !$isPending && !$isApproved;
 
     return view('attendance_detail', compact(
         'attendance',
@@ -171,15 +166,26 @@ public function update(UserAttendanceRequest $request, $id)
         ]);
 
         // 休憩申請
-        foreach ($data['breaks'] ?? [] as $index => $break) {
-            if (empty($break['break_start']) && empty($break['break_end'])) {
-                continue;
-            }
-$requestAttendance->breaks()->create([
-    'break_start' => $break['break_start'],
-    'break_end'   => $break['break_end'],
-            ]);
-        }
+       foreach ($data['breaks'] ?? [] as $break) {
+
+    $start = $break['break_start'] ?? null;
+    $end   = $break['break_end'] ?? null;
+
+    // 両方空ならスキップ
+    if (empty($start) && empty($end)) {
+        continue;
+    }
+
+    // 片方だけ入力はエラーにしたい場合はここでthrow
+    if (empty($start) || empty($end)) {
+        continue; // もしくは例外
+    }
+
+    $requestAttendance->breaks()->create([
+        'break_start' => $start,
+        'break_end'   => $end,
+    ]);
+}
     });
 
    return back()->withInput();
