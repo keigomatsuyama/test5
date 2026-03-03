@@ -23,7 +23,6 @@
 <main class="container">
   <h1 class="title">勤怠詳細</h1>
 
-  {{-- ★ form は isEdit のときだけ、全部を包む --}}
   @if ($isEdit)
   <form method="POST" action="{{ url('/attendance/detail/'.$attendance->id) }}">
     @csrf
@@ -32,20 +31,19 @@
 
   <div class="card">
 
-    {{-- 名前 --}}
     <div class="row">
       <div class="label">名前</div>
       <div class="value">{{ $attendance->user->name }}</div>
     </div>
 
-    {{-- 日付 --}}
     <div class="row">
       <div class="label">日付</div>
       <div class="value">
         {{ \Carbon\Carbon::parse($attendance->date)->locale('ja')->translatedFormat('Y年n月j日(D)') }}
       </div>
     </div>
-{{-- 出勤・退勤 --}}
+
+    {{-- 出勤・退勤 --}}
     <div class="row">
       <div class="label">出勤・退勤</div>
       <div class="value split">
@@ -59,117 +57,109 @@
       </div>
     </div>
 
-    {{-- 出勤・退勤エラー（1回だけ表示） --}}
-@error('clock_in')
-  <p class="error-message">{{ $message }}</p>
-@enderror
+    {{-- ★ 出勤・退勤エラー完全対応版 --}}
+    @if ($errors->has('clock_in') || $errors->has('clock_out'))
+      <p class="error-message">
+        {{ $errors->first('clock_in') ?: $errors->first('clock_out') }}
+      </p>
+    @endif
 
-@php
-    $breaks = old('breaks', $display->breaks ?? []);
+    @php
+        $breaks = old('breaks', $display->breaks ?? []);
 
-    // Collectionなら配列に変換
-    if ($breaks instanceof \Illuminate\Support\Collection) {
-        $breaks = $breaks->toArray();
-    }
+        if ($breaks instanceof \Illuminate\Support\Collection) {
+            $breaks = $breaks->toArray();
+        }
 
-    $breaks = array_filter($breaks, function($break) {
-        return !empty($break['break_start']) || !empty($break['break_end']);
-    });
+        $breaks = array_filter($breaks, function($break) {
+            return !empty($break['break_start']) || !empty($break['break_end']);
+        });
 
-    $breaks = array_values($breaks);
-@endphp
+        $breaks = array_values($breaks);
+    @endphp
 
-@foreach ($breaks as $index => $break)
-@endforeach
-@php
-    $newIndex = count($breaks);
-@endphp
-@foreach ($breaks as $index => $break)
-<div class="row">
-  <div class="label"> {{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</div>
-  <div class="value split">
-    <input type="text"
-      name="breaks[{{ $index }}][break_start]"
-      value="{{ old("breaks.$index.break_start",
-        isset($display->breaks[$index])
-          ? optional($display->breaks[$index]->break_start)->format('H:i')
-          : ''
-      ) }}"
-      {{ $isEdit ? '' : 'readonly' }}>
+    @foreach ($breaks as $index => $break)
+    <div class="row">
+      <div class="label">{{ $index === 0 ? '休憩' : '休憩' . ($index + 1) }}</div>
+      <div class="value split">
+        <input type="text"
+          name="breaks[{{ $index }}][break_start]"
+          value="{{ old("breaks.$index.break_start",
+            isset($display->breaks[$index])
+              ? optional($display->breaks[$index]->break_start)->format('H:i')
+              : ''
+          ) }}"
+          {{ $isEdit ? '' : 'readonly' }}>
 
-    〜
+        〜
 
-    <input type="text"
-      name="breaks[{{ $index }}][break_end]"
-      value="{{ old("breaks.$index.break_end",
-        isset($display->breaks[$index])
-          ? optional($display->breaks[$index]->break_end)->format('H:i')
-          : ''
-      ) }}"
-      {{ $isEdit ? '' : 'readonly' }}>
-  </div>
-</div>
+        <input type="text"
+          name="breaks[{{ $index }}][break_end]"
+          value="{{ old("breaks.$index.break_end",
+            isset($display->breaks[$index])
+              ? optional($display->breaks[$index]->break_end)->format('H:i')
+              : ''
+          ) }}"
+          {{ $isEdit ? '' : 'readonly' }}>
+      </div>
+    </div>
 
-@error("breaks.$index.break_start")
-  <p class="error-message">{{ $message }}</p>
-@enderror
+    @error("breaks.$index.break_start")
+      <p class="error-message">{{ $message }}</p>
+    @enderror
 
-@error("breaks.$index.break_end")
-  <p class="error-message">{{ $message }}</p>
-@enderror
-@endforeach
-@php
-    $newIndex = count($breaks);
-@endphp
+    @error("breaks.$index.break_end")
+      <p class="error-message">{{ $message }}</p>
+    @enderror
+    @endforeach
 
-<div class="row">
-  <div class="label">
-    {{ $newIndex === 0 ? '休憩' : '休憩' . ($newIndex + 1) }}
-  </div>
-  <div class="value split">
-    <input type="text"
-      name="breaks[{{ $newIndex }}][break_start]"
-      value="{{ old("breaks.$newIndex.break_start") }}"
-      {{ $isEdit ? '' : 'readonly' }}>
+    @php $newIndex = count($breaks); @endphp
 
-    〜
+    <div class="row">
+      <div class="label">
+        {{ $newIndex === 0 ? '休憩' : '休憩' . ($newIndex + 1) }}
+      </div>
+      <div class="value split">
+        <input type="text"
+          name="breaks[{{ $newIndex }}][break_start]"
+          value="{{ old("breaks.$newIndex.break_start") }}"
+          {{ $isEdit ? '' : 'readonly' }}>
 
-    <input type="text"
-      name="breaks[{{ $newIndex }}][break_end]"
-      value="{{ old("breaks.$newIndex.break_end") }}"
-      {{ $isEdit ? '' : 'readonly' }}>
-  </div>
-</div>
+        〜
 
-    {{-- 備考 --}}
+        <input type="text"
+          name="breaks[{{ $newIndex }}][break_end]"
+          value="{{ old("breaks.$newIndex.break_end") }}"
+          {{ $isEdit ? '' : 'readonly' }}>
+      </div>
+    </div>
+
     <div class="row">
       <div class="label">備考</div>
       <div class="value">
         <textarea name="remark" {{ $isEdit ? '' : 'readonly' }}>{{ old('remark', $display->remark) }}</textarea>
       </div>
     </div>
-    @error('remark') <p class="error-message">{{ $message }}</p> @enderror
+
+    @error('remark')
+      <p class="error-message">{{ $message }}</p>
+    @enderror
 
   </div>
 
-  {{-- ボタン --}}
- <div class="button-area">
-
+  <div class="button-area">
     @if ($isApproved)
         <span class="approved-btn">承認済み</span>
-
     @elseif ($isPending)
-        <p class="pending-message">
-            ※承認待ちのため修正はできません。
-        </p>
-
+        <p class="pending-message">※承認待ちのため修正はできません。</p>
     @else
         <button type="submit" class="btn-black">修正</button>
     @endif
+  </div>
 
-</div>
-
+  @if ($isEdit)
   </form>
+  @endif
 
 </main>
 </body>

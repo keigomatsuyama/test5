@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\AttendanceRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Attendance;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;;
 class AdminStampController extends Controller
 {

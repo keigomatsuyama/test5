@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Attendance;
-use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserAttendanceRequest;
 use App\Models\AttendanceRequest;
 

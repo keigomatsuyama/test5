@@ -3,3 +3,4 @@
 /vendor
 .env
 *.log
+src/docker/mysql/data/

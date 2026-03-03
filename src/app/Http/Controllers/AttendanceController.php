@@ -6,9 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
 use App\Http\Requests\UserAttendanceRequest;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 class AttendanceController extends Controller
 {
     public function index()
@@ -146,50 +144,20 @@ public function detail(Request $request, $id)
     ));
 }
 
-
 public function update(UserAttendanceRequest $request, $id)
 {
     $attendance = Attendance::findOrFail($id);
     $data = $request->validated();
-
-    DB::transaction(function () use ($attendance, $data) {
-
-        // 申請作成
-        $requestAttendance = AttendanceRequest::create([
-            'user_id'        => Auth::id(),
-            'attendance_id'  => $attendance->id,
-            'request_date'   => $attendance->date,
-            'clock_in'       => $data['clock_in'],
-            'clock_out'      => $data['clock_out'],
-            'remark'         => $data['remark'],
-            'status'         => 'pending',
-        ]);
-
-        // 休憩申請
-       foreach ($data['breaks'] ?? [] as $break) {
-
-    $start = $break['break_start'] ?? null;
-    $end   = $break['break_end'] ?? null;
-
-    // 両方空ならスキップ
-    if (empty($start) && empty($end)) {
-        continue;
-    }
-
-    // 片方だけ入力はエラーにしたい場合はここでthrow
-    if (empty($start) || empty($end)) {
-        continue; // もしくは例外
-    }
-
-    $requestAttendance->breaks()->create([
-        'break_start' => $start,
-        'break_end'   => $end,
+AttendanceRequest::create([
+        'user_id'       => auth()->id(),
+        'attendance_id' => $attendance->id,
+        'request_date'  => $attendance->date,
+        'clock_in'      => $data['clock_in'],
+        'clock_out'     => $data['clock_out'],
+        'remark'        => $data['remark'],
+        'status'        => 'pending',
     ]);
-}
-    });
-
-   return back()->withInput();
-
+    return redirect()->back();
 }
 
 public function stamp()
