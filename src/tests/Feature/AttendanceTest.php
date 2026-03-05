@@ -13,7 +13,7 @@ class AttendanceInputTest extends TestCase
 
     public function test_user_can_clock_in()
     {
-       $user = User::factory()->create([
+    $user = User::factory()->create([
     'email_verified_at' => now(),
     'is_admin' => false,
 ]);

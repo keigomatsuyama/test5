@@ -157,7 +157,7 @@ AttendanceRequest::create([
         'remark'        => $data['remark'],
         'status'        => 'pending',
     ]);
-    return redirect()->back();
+    return redirect()->route('attendance.detail', $attendance->id);
 }
 
 public function stamp()

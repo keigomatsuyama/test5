@@ -24,6 +24,7 @@ class RequestTest extends TestCase
             'email_verified_at' => now(), // ← これ追加
         ]);
         $this->actingAs($user);
+    $this->withoutMiddleware(\Illuminate\Auth\Middleware\EnsureEmailIsVerified::class);
 
         $attendance = Attendance::create([
             'user_id' => $user->id,
@@ -33,12 +34,13 @@ class RequestTest extends TestCase
             'status' => 1,
         ]);
 
-        $response = $this->put("/attendance/detail/{$attendance->id}", [
-            'clock_in' => '09:00',
-            'clock_out' => '18:00',
-            'remark' => '修正申請',
-            'breaks' => [],
-        ]);
+     $response = $this->actingAs($user, 'web')
+    ->put(route('attendance.update', $attendance->id), [
+        'clock_in' => '09:00',
+        'clock_out' => '18:00',
+        'remark' => '修正申請',
+        'breaks' => [],
+    ]);
 
         $response->assertStatus(302);
 
