@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
+use App\Models\RequestBreak;
 use App\Http\Requests\UserAttendanceRequest;
 use Illuminate\Support\Facades\Auth;
 class AttendanceController extends Controller
@@ -143,12 +144,12 @@ public function detail(Request $request, $id)
         'isEdit'
     ));
 }
-
 public function update(UserAttendanceRequest $request, $id)
 {
     $attendance = Attendance::findOrFail($id);
     $data = $request->validated();
-AttendanceRequest::create([
+
+    $requestModel = AttendanceRequest::create([
         'user_id'       => auth()->id(),
         'attendance_id' => $attendance->id,
         'request_date'  => $attendance->date,
@@ -157,9 +158,22 @@ AttendanceRequest::create([
         'remark'        => $data['remark'],
         'status'        => 'pending',
     ]);
+
+    foreach ($data['breaks'] ?? [] as $break) {
+
+        if (empty($break['break_start']) || empty($break['break_end'])) {
+            continue;
+        }
+
+        RequestBreak::create([
+            'attendance_request_id' => $requestModel->id,
+            'break_start' => $break['break_start'],
+            'break_end'   => $break['break_end'],
+        ]);
+    }
+
     return redirect()->route('attendance.detail', $attendance->id);
 }
-
 public function stamp()
 {
     return view('attendance_stamp'); // 表示したいBlade

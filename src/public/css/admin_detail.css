@@ -1,38 +1,38 @@
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Helvetica Neue", Arial, sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
 body {
-  background: #f5f5f5;
-  color: #333;
+    background: #f5f5f5;
+    color: #333;
 }
 
 /* ヘッダー */
 .header {
-  background-color: #000;
-  color: #fff;
-  height: 60px;
-  padding: 15px 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    background-color: #000;
+    color: #fff;
+    height: 60px;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .header img {
-  height: 24px;
+    height: 24px;
 }
 .header-left {
-  font-size: 22px;
-  font-weight: bold;
+    font-size: 22px;
+    font-weight: bold;
 }
 
 .header-nav a {
-  color: #fff;
-  text-decoration: none;
-  margin-left: 30px;
-  font-size: 14px;
+    color: #fff;
+    text-decoration: none;
+    margin-left: 30px;
+    font-size: 14px;
 }
 
 /* ===== メイン ===== */
@@ -71,9 +71,7 @@ body {
 
 .value {
     font-size: 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex: 1;
 }
 
 .split {
@@ -81,7 +79,10 @@ body {
     align-items: center;
     gap: 12px;
 }
-
+.value textarea{
+  width: 100%;
+  display: block;
+}
 input {
     width: 80px;
     padding: 6px 8px;

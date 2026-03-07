@@ -30,6 +30,11 @@ class UserAttendanceRequest extends FormRequest
             'remark.required' => '備考を記入してください',
             'clock_in.required' => '出勤時間を入力してください',
             'clock_out.required' => '退勤時間を入力してください',
+            'clock_in.date_format' => '出勤時間はHH:MM形式で入力してください',
+            'clock_out.date_format' => '退勤時間はHH:MM形式で入力してください',
+
+            'breaks.*.break_start.date_format' => '休憩時間はHH:MM形式で入力してください',
+            'breaks.*.break_end.date_format' => '休憩時間はHH:MM形式で入力してください',
         ];
     }
 
@@ -38,8 +43,10 @@ class UserAttendanceRequest extends FormRequest
         $validator->after(function ($validator) {
 
             // フォーマットエラーがある場合は Carbon にしない
-            if ($validator->errors()->has('clock_in') ||
-                $validator->errors()->has('clock_out')) {
+            if (
+                $validator->errors()->has('clock_in') ||
+                $validator->errors()->has('clock_out')
+            ) {
                 return;
             }
 
