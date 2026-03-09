@@ -87,6 +87,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 | 管理者
 |--------------------------------------------------------------------------
 */
+Route::post('/admin/logout', function () {
+    Auth::guard('admin')->logout();
+    return redirect('/admin/login');
+})->name('admin.logout');
 Route::get('/admin/login', [AdminController::class, 'adminlogin']);
 Route::post('/admin/login', [AdminController::class, 'login']);
 

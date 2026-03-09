@@ -12,21 +12,20 @@
 <header class="header">
   <img src="{{ asset('images/logo.png') }}" alt="ロゴ">
 
-  <nav class="header-nav">
+  <nav class="nav">
     <a href="{{ route('admin.attendances.index') }}">勤怠一覧</a>
     <a href="{{ route('admin.staff.list') }}">スタッフ一覧</a>
     <a href="{{ route('admin.stamp.index') }}">申請一覧</a>
-    <a href="{{ route('logout') }}"
-       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-      ログアウト
-    </a>
 
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+    <form method="POST" action="{{ route('admin.logout') }}">
       @csrf
+      <button type="submit" class="logout-link">
+        ログアウト
+      </button>
     </form>
   </nav>
-</header>
 
+</header>
   <!-- メイン -->
   <main class="container">
     <h1 class="title">｜ スタッフ一覧</h1>

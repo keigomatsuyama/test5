@@ -16,35 +16,50 @@ body {
     color: #fff;
     height: 60px;
     padding: 0 40px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
+
 .header img {
     height: 24px;
 }
-.header-left {
-    font-weight: bold;
-    font-size: 20px;
-    letter-spacing: 1px;
+
+/* ===== Navigation ===== */
+.nav {
+    display: flex;
+    align-items: center;
 }
 
-.header-nav a {
-    color: #fff;
-    text-decoration: none;
-    margin-left: 24px;
-    font-size: 14px;
-}
 .nav a {
     color: #fff;
     text-decoration: none;
     margin-left: 24px;
     font-size: 14px;
 }
+
+/* logout button */
+.logout-link {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    margin-left: 24px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* formのズレ防止 */
+.nav form {
+    display: inline;
+}
+
+
 /* メイン */
 .container {
   max-width: 900px;
-  margin: 60px auto;
+  margin: 40px auto;
   padding: 0 20px;
 }
 
